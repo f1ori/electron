@@ -10,6 +10,7 @@
 #include "base/functional/bind.h"
 #include "gin/handle.h"
 #include "shell/browser/browser.h"
+#include "shell/browser/window_list.h"
 #include "shell/common/gin_converters/callback_converter.h"
 #include "shell/common/gin_converters/gfx_converter.h"
 #include "shell/common/gin_converters/native_window_converter.h"
@@ -84,7 +85,7 @@ gfx::Point Screen::GetCursorScreenPoint(v8::Isolate* isolate) {
 #if defined(USE_OZONE)
   // Wayland will crash unless a window is created prior to calling
   // GetCursorScreenPoint.
-  if (!ui::OzonePlatform::IsInitialized()) {
+  if (!ui::OzonePlatform::IsInitialized() || WindowList::IsEmpty()) {
     gin_helper::ErrorThrower thrower(isolate);
     thrower.ThrowError(
         "screen.getCursorScreenPoint() cannot be called before a window has "
